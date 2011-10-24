@@ -9,8 +9,12 @@ class RstoneTopSpider(CrawlSpider):
 	name='rstonetop500'
 	allowed_domains = ["http://www.rollingstone.com/"]
 	start_urls=['http://www.rollingstone.com/music/lists/500-greatest-albums-of-all-time-19691231']
-	rules=[Rule(SgmlLinkExtractor(allow=('/music/lists/500-greatest-albums-of-all-time-19691231/*',)),'parse_item')]
+	rules=(
+		Rule(SgmlLinkExtractor(allow=('\/music\/lists\/500\-greatest\-albums\-of\-all\-time\-19691231', ))),
+		Rule(SgmlLinkExtractor(allow=('\/music\/lists\/500-greatest-albums-of-all-time-19691231\/*',)),follow=True,callback='parse_item'),
+	)
 	def parse_item(self,response):
+		self.log('Hi, this is an item page! %s' % response.url)
 		x=HtmlXPathSelector(response)
 		album=RstonetopItem()
 		album['position']=x.select("//div[@class='listItemDescriptonDiv']/div[@class='ListItemNumber']/text()")

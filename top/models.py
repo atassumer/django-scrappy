@@ -1,5 +1,5 @@
 from django.contrib.gis.db import models
-from rstonetop500db.albums.models import Album
+from rstonetop500.albums.models import Album
 
 class TopAlbum(models.Model):
   album=models.OneToOneField(Album)

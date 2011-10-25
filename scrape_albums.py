@@ -10,8 +10,8 @@ from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.selector import HtmlXPathSelector
 
-from rstonetop500db.albums.models import *
-from rstonetop500db.top.models import *
+from rstonetop500.albums.models import *
+from rstonetop500.top.models import *
 
 class RstoneTopSpider(CrawlSpider):
 	name='rstonetop500'

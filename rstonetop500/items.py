@@ -11,5 +11,6 @@ class RstonetopItem(Item):
 	title=Field()
 	artist=Field()
 	description=Field()
-	
+	def __str__(self):
+		return u"%s | %s - %s" % (self['position'],self['title'], self['artist'])
 	

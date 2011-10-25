@@ -7,21 +7,24 @@ from rstonetop500.items import RstonetopItem
 
 class RstoneTopSpider(CrawlSpider):
 	name='rstonetop500'
-	allowed_domains = ["http://www.rollingstone.com/"]
+	allowed_domains = ["www.rollingstone.com"]
 	start_urls=['http://www.rollingstone.com/music/lists/500-greatest-albums-of-all-time-19691231']
-	rules=(
-		Rule(SgmlLinkExtractor(allow=('\/music\/lists\/500\-greatest\-albums\-of\-all\-time\-19691231', ))),
-		Rule(SgmlLinkExtractor(allow=('\/music\/lists\/500-greatest-albums-of-all-time-19691231\/*',)),follow=True,callback='parse_item'),
-	)
+	rules = (
+        Rule(SgmlLinkExtractor(allow='/music/lists/500-greatest-albums-of-all-time-19691231/[0-9a-zA-Z\-]+$'),
+            'parse_item',
+            follow=True,
+        ),
+    )
 	def parse_item(self,response):
-		self.log('Hi, this is an item page! %s' % response.url)
 		x=HtmlXPathSelector(response)
 		album=RstonetopItem()
-		album['position']=x.select("//div[@class='listItemDescriptonDiv']/div[@class='ListItemNumber']/text()")
-		at=x.select("//div[@class='listItemDescriptonDiv']/h3/text()")
+		album['position']=x.select("//div[@class='listItemDescriptonDiv']/span[@class='ListItemNumber']/text()").extract()[0]
+		at=x.select("//div[@class='listItemDescriptonDiv']/h3/text()").extract()[0]
 		at=at.split('-')
-		album['title']=at[0]
-		album['artist']=at[1]
-		album['description']=x.select("//div[@class='listPageContentModule']/div[@class='listPageContentInfo']/text()")
-		album['cover']=x.select("//div[@class='listPageContentModule']/div[@class='listPageContentImage']/img[0]/@src")
+		album['title']=at[0].strip()
+		album['artist']=at[1].strip()
+		print x.select("//div[@class='listPageContentModule']/div[@class='listPageContentInfo']/text()").extract()
+		album['description']=x.select("//div[@class='listPageContentModule']/div[@class='listPageContentInfo']/text()").extract()
+		print x.select("//div[@class='listPageContentModule']/div[@class='listPageContentImage']/img[0]/@src").extract()
+		album['cover']=x.select("//div[@class='listPageContentModule']/div[@class='listPageContentImage']/img[0]/@src").extract()
 		return album
